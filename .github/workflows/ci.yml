@@ -11,94 +11,61 @@ jobs:
     name: Validate Code
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Validate Commit Messages
-        uses: wagoid/commitlint-github-action@v5
-        if: github.event_name == 'pull_request'
-        
-      - name: Conventional PR Title
-        uses: amannn/action-semantic-pull-request@v5
-        if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          types: |
-            feat
-            fix
-            docs
-            style
-            refactor
-            perf
-            test
-            chore
-          requireScope: false
-          subjectPattern: ^[A-Z].+$
-          subjectPatternError: |
-            The subject must begin with a capital letter
-            Examples:
-              - feat: Add new feature
-              - fix: Resolve bug
-              - docs: Update README
-
+          
+      - name: Conventional Commits Check
+        uses: webiny/action-conventional-commits@v1.1.0
+      
+      - name: Verify Commit Signatures
+        run: |
+          git verify-commit HEAD^{commit}
+          
   lint:
-    name: Lint Code
+    name: Code Quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-          cache: 'pip'
-
-      - name: Install Python linting tools
+          python-version: '3.11'
+          
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 black isort mypy
-      
-      - name: Run Python lints
-        run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          black . --check
-          isort . --check-only
-          mypy .
-        continue-on-error: true  # Until we have proper type hints
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-        if: hashFiles('package.json') != ''
-
-      - name: Install Node.js dependencies
-        if: hashFiles('package.json') != ''
-        run: npm ci
-
-      - name: Run JavaScript/TypeScript lints
-        if: hashFiles('package.json') != ''
-        run: |
-          npm run lint
-        continue-on-error: true
-
+          pip install flake8 black isort
+          
+      - name: Check code formatting with Black
+        run: black . --check
+        
+      - name: Check imports with isort
+        run: isort . --check-only --profile black
+        
+      - name: Lint with flake8
+        run: flake8 . --count --show-source --statistics
+        
   security:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run Bandit
+        uses: tj-actions/bandit@v5.1
+        with:
+          targets: |
+            .
+          options: "-r -c pyproject.toml -ll"
+          
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python@master
-        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Run security scan
-        uses: securego/gosec@master
         with:
-          args: ./...
-        continue-on-error: true 
+          args: --severity-threshold=high 

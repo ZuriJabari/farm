@@ -1,0 +1,49 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Commit Message
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name == 'pull_request'
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            chore
+          requireScope: false
+          subjectPattern: ^[A-Z].+$
+          subjectPatternError: |
+            The subject must begin with a capital letter
+            Examples:
+              - feat: Add new feature
+              - fix: Resolve bug
+              - docs: Update README
+      - name: Lint Files
+        run: |
+          if [ -f "package.json" ]; then
+            echo "Running JavaScript/TypeScript linting"
+            npm ci
+            npm run lint
+          fi
+          if [ -f "requirements.txt" ]; then
+            echo "Running Python linting"
+            pip install flake8
+            flake8 .
+          fi
+        continue-on-error: true 

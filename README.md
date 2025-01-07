@@ -9,7 +9,7 @@ A modern farm management system designed for efficient agricultural operations.
 - ✅ Branch Protection
 - ✅ Code Quality Checks
 - ✅ Security Scanning
-- 🚧 GPG Signing (In Progress)
+- ✅ GPG Signing
 - 🚧 Initial Development
 
 ## Setup
@@ -42,6 +42,12 @@ A modern farm management system designed for efficient agricultural operations.
 - `refactor`: Code refactoring
 - `test`: Test updates
 - `chore`: Maintenance tasks
+
+### Security
+- All commits must be signed with GPG
+- Branch protection rules are enforced
+- Code reviews are required for changes
+- Status checks must pass before merging
 
 ### Pull Request Guidelines
 - Changes should be made through pull requests

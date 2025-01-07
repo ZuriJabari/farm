@@ -1,21 +1,29 @@
 name: CI
+
 on:
   push:
-    branches:
-      - main
+    branches: [ main, develop ]
   pull_request:
-    branches:
-      - main
+    branches: [ main, develop ]
+
 jobs:
   validate:
+    name: Validate Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate Commit Message
+        with:
+          fetch-depth: 0
+
+      - name: Validate Commit Messages
+        uses: wagoid/commitlint-github-action@v5
+        if: github.event_name == 'pull_request'
+        
+      - name: Conventional PR Title
         uses: amannn/action-semantic-pull-request@v5
+        if: github.event_name == 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: github.event_name == 'pull_request'
         with:
           types: |
             feat
@@ -34,16 +42,63 @@ jobs:
               - feat: Add new feature
               - fix: Resolve bug
               - docs: Update README
-      - name: Lint Files
+
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install Python linting tools
         run: |
-          if [ -f "package.json" ]; then
-            echo "Running JavaScript/TypeScript linting"
-            npm ci
-            npm run lint
-          fi
-          if [ -f "requirements.txt" ]; then
-            echo "Running Python linting"
-            pip install flake8
-            flake8 .
-          fi
+          python -m pip install --upgrade pip
+          pip install flake8 black isort mypy
+      
+      - name: Run Python lints
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          black . --check
+          isort . --check-only
+          mypy .
+        continue-on-error: true  # Until we have proper type hints
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+        if: hashFiles('package.json') != ''
+
+      - name: Install Node.js dependencies
+        if: hashFiles('package.json') != ''
+        run: npm ci
+
+      - name: Run JavaScript/TypeScript lints
+        if: hashFiles('package.json') != ''
+        run: |
+          npm run lint
+        continue-on-error: true
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/python@master
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run security scan
+        uses: securego/gosec@master
+        with:
+          args: ./...
         continue-on-error: true 

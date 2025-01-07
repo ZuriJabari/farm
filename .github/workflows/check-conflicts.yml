@@ -1,0 +1,26 @@
+name: Check Conflicts
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check-conflicts:
+    name: Check for Merge Conflicts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Check for merge conflicts
+        run: |
+          if git merge-tree $(git merge-base HEAD origin/${GITHUB_BASE_REF}) origin/${GITHUB_BASE_REF} HEAD | grep -q "^<<<<<<< HEAD"; then
+            echo "❌ Merge conflicts detected"
+            echo "Please resolve conflicts before merging"
+            exit 1
+          else
+            echo "✅ No merge conflicts detected"
+          fi 

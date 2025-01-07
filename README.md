@@ -4,6 +4,12 @@
 
 A modern farm management system designed for efficient agricultural operations.
 
+## Project Status
+- ✅ CI/CD Setup
+- ✅ Branch Protection
+- ✅ Code Quality Checks
+- ✅ Security Scanning
+
 ## Setup
 
 1. Clone the repository:

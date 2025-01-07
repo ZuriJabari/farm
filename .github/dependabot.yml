@@ -5,23 +5,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: "develop"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
-      - "python"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-
-  # Node.js dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    target-branch: "develop"
-    labels:
-      - "dependencies"
-      - "javascript"
+      - "security"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -31,7 +18,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: "develop"
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "github-actions"

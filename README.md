@@ -9,6 +9,7 @@ A modern farm management system designed for efficient agricultural operations.
 - ✅ Branch Protection
 - ✅ Code Quality Checks
 - ✅ Security Scanning
+- 🚧 Initial Development
 
 ## Setup
 
@@ -46,3 +47,4 @@ A modern farm management system designed for efficient agricultural operations.
 - PRs require at least one review
 - Commit messages must follow conventional commits format
 - Branch must be up to date before merging
+- All commits must be signed with GPG

@@ -42,9 +42,9 @@ A modern farm management system designed for efficient agricultural operations.
 - `test`: Test updates
 - `chore`: Maintenance tasks
 
-### Pull Requests
-- All changes must be made through pull requests
-- PRs require at least one review
+### Pull Request Guidelines
+- Changes should be made through pull requests
 - Commit messages must follow conventional commits format
 - Branch must be up to date before merging
 - All commits must be signed with GPG
+- All status checks must pass

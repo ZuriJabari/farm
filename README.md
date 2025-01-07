@@ -9,6 +9,8 @@ A modern farm management system designed for efficient agricultural operations.
 - ✅ Branch Protection
 - ✅ Code Quality Checks
 - ✅ Security Scanning
+- ✅ GPG Signing
+- 🚧 Initial Development
 
 ## Setup
 
@@ -18,9 +20,16 @@ A modern farm management system designed for efficient agricultural operations.
    cd farm
    ```
 
-2. Install dependencies (will be added as needed)
+2. Install dependencies:
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
 
-3. Run the project (instructions will be added)
+3. Set up pre-commit hooks:
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   ```
 
 ## Development
 
@@ -41,8 +50,15 @@ A modern farm management system designed for efficient agricultural operations.
 - `test`: Test updates
 - `chore`: Maintenance tasks
 
-### Pull Requests
-- All changes must be made through pull requests
-- PRs require at least one review
+### Security
+- All commits must be signed with GPG
+- Branch protection rules are enforced
+- Status checks must pass before merging
+- Linear history is required
+
+### Pull Request Guidelines
+- Changes should be made through pull requests
 - Commit messages must follow conventional commits format
 - Branch must be up to date before merging
+- All commits must be signed with GPG
+- All status checks must pass

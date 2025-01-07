@@ -9,6 +9,7 @@ A modern farm management system designed for efficient agricultural operations.
 - ✅ Branch Protection
 - ✅ Code Quality Checks
 - ✅ Security Scanning
+- ✅ GPG Signing
 - 🚧 Initial Development
 
 ## Setup

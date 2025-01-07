@@ -1,5 +1,7 @@
 # Safi Farm
 
+[![CI](https://github.com/ZuriJabari/farm/actions/workflows/ci.yml/badge.svg)](https://github.com/ZuriJabari/farm/actions/workflows/ci.yml)
+
 A modern farm management system designed for efficient agricultural operations.
 
 ## Setup
@@ -18,9 +20,11 @@ A modern farm management system designed for efficient agricultural operations.
 
 ### Branch Structure
 - `main`: Production-ready code
-- `feature/*`: New features and improvements
-- `fix/*`: Bug fixes
-- `backup/*`: Monthly backups
+- `develop`: Main development branch
+- Feature branches: `feature/*`
+- Bug fixes: `fix/*`
+- Hotfixes: `hotfix/*`
+- Releases: `release/*`
 
 ### Commit Convention
 - `feat`: New features
@@ -30,3 +34,9 @@ A modern farm management system designed for efficient agricultural operations.
 - `refactor`: Code refactoring
 - `test`: Test updates
 - `chore`: Maintenance tasks
+
+### Pull Requests
+- All changes must be made through pull requests
+- PRs require at least one review
+- Commit messages must follow conventional commits format
+- Branch must be up to date before merging
